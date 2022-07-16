@@ -1,0 +1,146 @@
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+  <!---- BOOTSTRAP ---->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  <title>Quick Start - Leaflet</title>
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico"/>
+
+  <!---- LEAFLET ---->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
+        integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
+        crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
+          integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
+          crossorigin=""></script>
+
+
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
+
+    .leaflet-container {
+      height: 400px;
+      width: 600px;
+      max-width: 100%;
+      max-height: 100%;
+    }
+  </style>
+
+
+</head>
+
+
+	<main class="container align-items-center justify-content-center" role="main">
+
+	<div class="row">
+	<div class="col"><h1 style="text-align:center;"> CO2 Emissionen der Universität Stuttgart </h1></div>
+	</div>
+	<div class="row">
+	<div class="col-10">
+	<div class="animation" id="animation_frame">
+	<img class="animate_background img-fluid" src="Hintergrund.jpg">
+	<img class="animate" id="sea" src="Meer.jpg">
+	</div>
+	</div>
+	<div class="col-2">
+	<input id="input_sea_level" 
+           type="text" 
+           value="" />
+	<button onClick="animateSeaLevel()">
+		Meeresspiegel setzen
+	</button>
+	<hr/>
+	<input id="input_co2_gesamt_uni"
+		   type="text"
+		   value="CO2 Verbrauch der Uni" /> in Tonnen pro Jahr
+	<button onClick="animateSeaLevelUsingCO2()">
+		Meeresspiegel mit CO2 Ausstoß der Uni Stuttgart setzen
+	</button>
+	<hr/>
+	Stromverbrauch
+	<input id="input_stromverbrauch"
+		   type="text"
+		   value="" />
+	MWh pro Jahr
+	Wärmeverbrauch
+	<input id="input_waerme"
+		   type="text"
+		   value="" />
+	MWh pro Jahr
+	<button onClick="animateSeaLevelUsingEnergy()">
+		Meeresspiegel mit Strom und Wärmeverbrauch der Uni Stuttgart setzen.
+	</button>
+	</div>
+	</div>
+	
+	<hr/>
+
+<div class="row">
+  <div class="column">
+    <div id="map" style="height: 500px; width: 600px;"></div>
+
+  </div>
+  <div class="column">
+    <img src="assets/image.png">
+  </div>
+
+</div>
+
+	<div class="container-sm">
+<h3 id="wie-funktioniert-die-berechnung">Wie funktioniert die
+Berechnung?</h3>
+<p>Angenommen, jeder Mensch auf der Erde würde so viel CO<span
+class="math inline"><sub>2</sub></span> verbrauchen wie ein
+Uni-Angehöriger. Wie hoch würde dann der Meeresspiegel <span
+class="math inline"><em>M</em></span> bis zum Jahr 2100 steigen?</p>
+<p>Dazu betrachten wir verschiedene sozio-ökonomische Zukunftszenarien
+<span class="math inline"><em>s</em></span>
+(https://en.wikipedia.org/wiki/Shared_Socioeconomic_Pathways), für die
+der Meerespiegel bis <span
+class="math inline"><em>M</em><sub><em>s</em></sub></span> bis 2100
+prognostiziert ist. Für diese Szenarien ist bekannt wie viel CO<span
+class="math inline"><sub>2</sub></span> noch bis 2100 insgesamt
+ausgestoßen werden kann. Dies bezeichnet man auch als CO<span
+class="math inline"><sub>2</sub></span> Budget <span
+class="math inline"><em>B</em><sub><em>s</em></sub></span>. Wir nehmen
+nun an, dass das CO<span class="math inline"><sub>2</sub></span> Budget
+<span class="math inline"><em>B</em></span> gleichmäßig auf <span
+class="math inline"><em>N</em></span> Menschen aufgeteilt ist. Das
+Budget pro Person bis 2100 ist dann <span
+class="math inline"><em>b</em><sub><em>s</em></sub> = <em>B</em><sub><em>s</em></sub>/<em>N</em></span>,
+wobei das Budget abhängig ist vom Szenario <span
+class="math inline"><em>s</em></span>.</p>
+<p>Aus Strom- und Wärmeverbrauch der Universität Stuttgart wird der
+CO<span class="math inline"><sub>2</sub></span> Ausstoß <span
+class="math inline"><em>c</em></span> pro Jahr ausgerechnet. Dann nehmen
+wir an, dass der CO<span class="math inline"><sub>2</sub></span> Ausstoß
+der Universität bis 2100 konstant ist. Der angenommene Gesamtausstoß
+<span class="math inline"><em>C</em></span> der Universität ist dann
+<span class="math inline"><em>C</em> = <em>c</em> ⋅ Jahre bis
+2100</span>. Der Gesamtaustoß wird auf alle Uni-Angehörigen <span
+class="math inline"><em>n</em></span> aufgeteilt. Dann ist der CO<span
+class="math inline"><sub>2</sub></span> Verbrauch pro Uni-Angehörige bis
+2100 gegeben mit <span
+class="math inline"><em>β</em> = <em>C</em>/<em>n</em></span>. Durch den
+Vergleich des prognostizierten CO<span
+class="math inline"><sub>2</sub></span> Verbrauchs <span
+class="math inline"><em>β</em></span> mit den CO<span
+class="math inline"><sub>2</sub></span> Budgets der Zukunftsszenarien
+<span class="math inline"><em>b</em><sub><em>s</em></sub></span> wird
+das wahrscheinlichste Zukunftsszenario bestimmt, und so der Anstieg des
+Meeresspiegels abgeschätzt. Zwischen den Zukunftsszenarien wird linear
+interpoliert.</p>
+	</div>
+
+	</main>
+
