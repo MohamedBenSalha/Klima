@@ -1,0 +1,24 @@
+img {
+	width: 100%;
+}
+
+.animate {
+	position: absolute;
+	overflow: hidden;
+	left: 0;
+	top: 400px;
+}
+
+.animate_background {
+	top: 0;
+	left: 0;
+}
+
+.animation{
+	overflow: hidden;
+	position: relative;
+}
+
+#sea {
+	opacity: 0.8;
+}
